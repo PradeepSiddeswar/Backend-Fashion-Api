@@ -14,7 +14,7 @@ app.use(cors({
 
 const CategoryDetailsRoute = require('./Routes/CategoryDetails_Router')
 const TopListRoute = require("./Routes/TopList_Router")
-const TabsListRoute = require('./Routes/TabsList_Router')
+// const TabsListRoute = require('./Routes/TabsList_Router')
 const bp = require("body-parser")
 app.use(bp.json());
 app.use(bp.urlencoded({extended:false}));
@@ -43,4 +43,4 @@ app.get("/", (req, res) => {
 app.use(express.static("upload"))
 app.use('/Category-Details', CategoryDetailsRoute)
 app.use('/Tabs-List', TopListRoute)
-app.use('/TabsList1', TabsListRoute)
+// app.use('/TabsList1', TabsListRoute)
