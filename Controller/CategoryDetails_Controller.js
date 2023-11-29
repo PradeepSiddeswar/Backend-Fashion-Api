@@ -55,7 +55,7 @@ exports.getSubCategory = async (req, res) => {
       SubCategories: subcategories.map(subcategory => ({
         _id: subcategory._id,
         image: subcategory.image,
-        ...(subcategory.title && { title: subcategory.title }) // Include 'title' only if it exists
+        ...(subcategory.title && { title: subcategory.title }) 
       })),
     };
 
@@ -69,11 +69,6 @@ exports.getSubCategory = async (req, res) => {
 
 
 
-
-
-
-
-// delete method
 // Delete method for all entities
 exports.delete = async (req, res) => {
   const { entityType, id } = req.params;
