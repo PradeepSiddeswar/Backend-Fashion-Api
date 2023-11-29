@@ -21,7 +21,7 @@ exports.create = async (req, res) => {
     try {
       const records = await CategoryDetails.find().select('-__v');
       const responseData = {
-        message: 'All Category Added successfully',
+        message: 'All Category Added Successfully',
          Data: records,
       };
   
