@@ -1,25 +1,24 @@
-const CategoryDetails = require('../Model/CategoryDetails_Model')
-const SubCategory = require('../Model/SubCategory_Model')
+const CategoryDetails = require('../Model/CategoryDetails_Model');
+const Subcategory = require('../Model/SubCategory_Model');
 
-// Create Category
-exports.create = async (req, res) => {
+
+// category create method
+
+exports.createCategory = async (req, res) => {
   try {
-    const requestData = req.body;
-
-    const newCategoryDetails = new CategoryDetails(requestData);
-
-    const savedCategoryDetails = await newCategoryDetails.save();
-
-    res.status(201).json(savedCategoryDetails);
+    const category = new CategoryDetails(req.body);
+    const newCategory = await category.save();
+    res.json(newCategory);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
-};
+}
 
-// Create SubCategory
+// Subcategory Create Method
+
 exports.createSubcategory = async (req, res) => {
   try {
-    const subcategory = new SubCategory(req.body);
+    const subcategory = new Subcategory(req.body);
     const newSubcategory = await subcategory.save();
     res.json(newSubcategory);
   } catch (error) {
@@ -28,38 +27,32 @@ exports.createSubcategory = async (req, res) => {
 };
 
 
-// get method with Category
-exports.getAll = async (req, res) => {
+/// get method with Categories
+
+exports.getCategories = async (req, res) => {
   try {
-    const records = await CategoryDetails.find().select('-__v');
+    const categories = await CategoryDetails.find({}, 'id name image');
+
+
     const responseData = {
-      message: 'All Category Added Successfully',
-      Data: records,
-    };
-
-    res.status(200).json(responseData);
-  } catch (error) {
-    console.error('Error fetching records:', error);
-    res.status(500).json({ error: 'Error fetching records', message: error.message });
-  }
-};
-
-// Get Method SubCategoryDetails
-
-exports.getSubCategory = async (req, res) => {
-  try {
-    const subcategories = await SubCategory.find({ category: req.params.id }, 'id image title');
-    
-    const responseData = {
-      message: 'All SubCategory Added Successfully',
-      SubCategories: subcategories.map(subcategory => ({
-        _id: subcategory._id,
-        image: subcategory.image,
-        ...(subcategory.title && { title: subcategory.title }) 
-      })),
+      message: 'All Categories added successfully',
+      data: categories
     };
 
     res.json(responseData);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+
+// Get Method CategoryDetails
+
+exports.getSubCategories = async (req, res) => {
+  try {
+    const category = await CategoryDetails.findById(req.params.id);
+    const subcategories = await Subcategory.find({ category: req.params.id }, 'id name image');
+    res.json({ id: category.id, name: category.name, subcategories });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -80,7 +73,7 @@ exports.delete = async (req, res) => {
         result = await CategoryDetails.findByIdAndDelete(id);
         break;
       case 'subcategory':
-        result = await SubCategory.findByIdAndDelete(id);
+        result = await Subcategory.findByIdAndDelete(id);
         break;
      
       default:

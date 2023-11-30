@@ -48,7 +48,6 @@ exports.create =  async (req, res) => {
     }
   };
   
-  
 // delete method
 exports.delete = (req, res) => {
     const id = req.params.id

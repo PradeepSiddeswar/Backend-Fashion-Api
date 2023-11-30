@@ -1,12 +1,13 @@
+
 const mongoose = require('mongoose');
 
 const subcategorySchema = new mongoose.Schema({
-    image: String,
-    title: String,
-    category: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'CategoryDetails' // This should match the model name of the CategoryDetails schema
-    }
+  image: String,
+  name: String,
+  category: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'CategoryDetails',
+  },
 });
 
 const Subcategory = mongoose.model('Subcategory', subcategorySchema);
