@@ -7,7 +7,7 @@ const CategoryDetails_Controller = require('../Controller/CategoryDetails_Contro
 router.post('/categories', CategoryDetails_Controller.createCategory);
 router.post('/subcategories', CategoryDetails_Controller.createSubcategory);
 // router.post('/items', categoryController.createItem);
-// router.post('/productDetails',categoryController.createProductDetails)
+router.post('/productDetails',CategoryDetails_Controller.createProductDetails)
 // router.post('/similarProducts', categoryController.createSimilarProducts)
 // router.post('/add-to-cart', categoryController.createaddToCart)
 
@@ -16,7 +16,7 @@ router.post('/subcategories', CategoryDetails_Controller.createSubcategory);
 router.get('/categories', CategoryDetails_Controller.getCategories);
 router.get('/subcategories/:id', CategoryDetails_Controller.getSubCategories);
 // router.get('/categories/:categoryId/subcategories/:subcategoryId', categoryController.getSubcategoryItems);
-// router.get('/categories/:categoryId/subcategories/:subcategoryId/productDetails/:productId', categoryController.getProductsDetails);
+router.get('/productDetails/:subcategoryId', CategoryDetails_Controller.getProductsDetails);
 // router.get('/similarProducts/:productId', categoryController.getSimilarProducts);
 
 // Add-to-cart Api
