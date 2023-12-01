@@ -1,6 +1,7 @@
 const CategoryDetails = require('../Model/CategoryDetails_Model');
 const Subcategory = require('../Model/SubCategory_Model');
 const ProductItem = require('../Model/ProductItem_Model')
+const SimilarItems = require('../Model/SimilarProduct_Model')
 
 // category create method
 exports.create = async (req, res) => {
@@ -78,6 +79,39 @@ exports.createProductDetails = async (req, res) => {
   }
 };
 
+// Create SimilarItems method
+exports.createSimilarProducts = async (req, res) => {
+  try {
+    const productData = req.body;
+
+    // Check if quantity is provided and if it's less than or equal to 0
+    if (!productData.quantity || productData.quantity <= 0) {
+      productData.status = 'out of stock';
+    } else {
+      productData.status = 'in stock';
+    }
+
+    // Calculate the total price with the discount applied (decrease of 12%)
+    const totalPrice = Number(productData.Mrp) * Number(productData.quantity) * (1 - (Number(productData.offer) / 100));
+    const totalQuantity = Number(productData.quantity);
+
+
+
+    const product = new SimilarItems(productData);
+    await product.save();
+
+    const response = {
+      product,
+      totalPrice: totalPrice.toFixed(2),
+      totalQuantity,
+    };
+
+    res.status(201).json(response);
+  } catch (error) {
+    console.error('Error saving product to the database:', error);
+    res.status(500).json({ error: 'Could not save the product to the database' });
+  }
+};
 
 /// get method with Categories
 
@@ -161,6 +195,43 @@ exports.getProductsDetails = async (req, res) => {
   }
 };
 
+ // Get method Similaritems
+ exports.getSimilarProducts = async (req, res) => {
+  try {
+    const limitCount = 10;
+
+    const products = await SimilarItems
+      .find({ subcategoryId: req.params.subcategoryId})
+      .limit(limitCount);
+
+    if (products.length === 0) {
+      return res.status(404).json({ message: 'SimilarProducts is not available' });
+    }
+
+    const similarProducts = products.map(item => ({
+      product: {
+        _id: item._id,
+        name: item.name,
+        Mrp: item.Mrp,
+        Mop: item.Mop,
+        offer: item.offer,
+        image: item.image,
+        quantity: item.quantity,
+        status: item.quantity > 0 ? 'in stock' : 'out of stock'
+      },
+      totalAmount: (item.Mrp * item.quantity * (1 - (item.offer / 100))).toFixed(2),
+      totalQuantity: item.quantity
+    }));
+
+    // Return the formatted response
+    res.json({
+      message: 'All SimilarProducts is available',
+      similarProducts,
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
 
 
 
@@ -179,6 +250,9 @@ exports.delete = async (req, res) => {
         break;
       case 'productDetails':
         result = await ProductItem.findByIdAndDelete(id);
+        break;
+        case 'similarProducts':
+        result = await SimilarItems.findByIdAndDelete(id);
         break;
       default:
         return res.status(400).send('Invalid entity type');

@@ -8,7 +8,7 @@ router.post('/categories', CategoryDetails_Controller.create);
 router.post('/subcategories', CategoryDetails_Controller.createSubcategory);
 // router.post('/items', categoryController.createItem);
 router.post('/productDetails',CategoryDetails_Controller.createProductDetails)
-// router.post('/similarProducts', categoryController.createSimilarProducts)
+router.post('/similarProducts', CategoryDetails_Controller.createSimilarProducts)
 // router.post('/add-to-cart', categoryController.createaddToCart)
 
 
@@ -17,7 +17,7 @@ router.get('/categories', CategoryDetails_Controller.getCategories);
 router.get('/subcategories/:id', CategoryDetails_Controller.getSubCategories);
 // router.get('/categories/:categoryId/subcategories/:subcategoryId', categoryController.getSubcategoryItems);
 router.get('/productDetails/:subcategoryId', CategoryDetails_Controller.getProductsDetails);
-// router.get('/similarProducts/:productId', categoryController.getSimilarProducts);
+router.get('/similarProducts/:subcategoryId', CategoryDetails_Controller.getSimilarProducts);
 
 // Add-to-cart Api
 // router.get('/allitemsIncart', categoryController.getAllItemsInCart);
