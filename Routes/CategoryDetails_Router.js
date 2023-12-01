@@ -9,7 +9,7 @@ router.post('/subcategories', CategoryDetails_Controller.createSubcategory);
 // router.post('/items', categoryController.createItem);
 router.post('/productDetails',CategoryDetails_Controller.createProductDetails)
 router.post('/similarProducts', CategoryDetails_Controller.createSimilarProducts)
-// router.post('/add-to-cart', categoryController.createaddToCart)
+router.post('/add-to-cart', CategoryDetails_Controller.createaddToCart)
 
 
 // Get Method with Api
@@ -20,10 +20,10 @@ router.get('/productDetails/:subcategoryId', CategoryDetails_Controller.getProdu
 router.get('/similarProducts/:subcategoryId', CategoryDetails_Controller.getSimilarProducts);
 
 // Add-to-cart Api
-// router.get('/allitemsIncart', categoryController.getAllItemsInCart);
+router.get('/allitemsIncart', CategoryDetails_Controller.getAllItemsInCart);
 
 // Delete Method with All Products
-// router.delete('/removeFromCart/:itemId', categoryController.removeFromCart);
+router.delete('/removeFromCart/:itemId', CategoryDetails_Controller.removeFromCart);
 router.delete('/:entityType/:id',CategoryDetails_Controller.delete);
 
 

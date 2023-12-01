@@ -113,8 +113,28 @@ exports.createSimilarProducts = async (req, res) => {
   }
 };
 
-/// get method with Categories
 
+// Create Add-to-Cart Method
+let cart = [];
+exports.createaddToCart = async (req, res) => {
+  try {
+    const { productIds } = req.body;
+
+    if (!productIds || (Array.isArray(productIds) && productIds.length === 0)) {
+      return res.status(400).json({ error: 'Invalid request format' });
+    }
+    const idsToAdd = Array.isArray(productIds) ? productIds : [productIds];
+
+    cart.push(...idsToAdd);
+
+    return res.status(200).json({ message: 'Items added to the cart successfully' });
+  } catch (error) {
+    console.error('Error adding items to cart:', error); // Log error for debugging
+    return res.status(500).json({ error: 'Could not add items to the cart' });
+  }
+};
+
+/// get method with Categories
 exports.getCategories = async (req, res) => {
   try {
     const categories = await CategoryDetails.find({}, 'id name image');
@@ -232,6 +252,70 @@ exports.getProductsDetails = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+// Multiple Add-to-cart
+exports.getAllItemsInCart = async (req, res) => {
+  try {
+    const itemCartItems = await ProductItem.find({ _id: { $in: cart } });
+    const similarProductCartItems = await SimilarItems.find({ _id: { $in: cart } });
+
+    const cartItems = [...itemCartItems, ...similarProductCartItems];
+
+    if (!cartItems || cartItems.length === 0) {
+      return res.status(404).json({ message: 'No items found in the cart' });
+    }
+
+    let totalQuantity = 0;
+    let totalAmount = 0;
+
+    cartItems.forEach((item) => {
+      totalQuantity += item.quantity;
+      totalAmount += item.Mrp * item.quantity * (1 - item.offer / 100);
+    });
+
+    const response = {
+      cartItems: cartItems.map((item) => ({
+        product: item,
+        totalAmount: (item.Mrp * item.quantity * (1 - item.offer / 100)).toFixed(2),
+        totalQuantity: item.quantity,
+      })),
+      totalAmount: totalAmount.toFixed(2),
+      totalQuantity,
+    };
+
+    return res.status(200).json({
+      message: 'All Items Added-To-Cart Successfully',
+      ...response,
+    });
+  } catch (error) {
+    console.error('Error retrieving items:', error);
+    return res.status(500).json({ error: 'Could not retrieve items from the cart' });
+  }
+};
+
+
+exports.removeFromCart = async (req, res) => {
+  try {
+    const { itemId } = req.params;
+
+  
+    const indexToRemove = cart.findIndex((item) => item === itemId);
+
+    if (indexToRemove === -1) {
+      return res.status(404).json({ message: 'Item not found in the cart' });
+    }
+
+    cart.splice(indexToRemove, 1);
+
+    return res.status(200).json({ message: 'Item removed from the cart successfully' });
+  } catch (error) {
+    console.error('Error removing item from cart:', error);
+    return res.status(500).json({ error: 'Could not remove item from the cart' });
+  }
+};
+
+
+
 
 
 
