@@ -5,8 +5,14 @@ const productItemSchema = new mongoose.Schema({
   Mrp: Number,
   Mop: Number,
   offer: Number,
-  size: [String],
-  Color: [String],
+  size: [{
+    size: String,
+    Text: String
+  }],
+  Color: [{
+    colors: String,
+    Code: String,
+  }],
   subcategoryId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Subcategory', // Reference to the Subcategory model

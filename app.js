@@ -41,6 +41,6 @@ app.get("/", (req, res) => {
 })
 
 app.use(express.static("upload"))
-app.use('/Category-Details', CategoryDetailsRoute)
+app.use('/Category-Details', CategoryDetailsRoute) // imported all Subcategory and ProductDetails here 
 app.use('/Tabs-List', TopListRoute)
 // app.use('/TabsList1', TabsListRoute)

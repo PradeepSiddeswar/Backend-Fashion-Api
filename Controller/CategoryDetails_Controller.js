@@ -3,22 +3,40 @@ const Subcategory = require('../Model/SubCategory_Model');
 const ProductItem = require('../Model/ProductItem_Model')
 
 // category create method
-
-exports.createCategory = async (req, res) => {
-  try {
-    const category = new CategoryDetails(req.body);
-    const newCategory = await category.save();
-    res.json(newCategory);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+exports.create = async (req, res) => {
+  if (!req.body) {
+    res.status(400).send("Content Cannot Be Empty");
+    return;
   }
-}
+
+  const { name, image } = req.body;
+
+  if (!name || !image) {
+    res.status(400).send("Name and image are required fields");
+    return;
+  }
+
+  const category = new CategoryDetails({
+    name: req.body.name,
+    image: req.body.image,
+  });
+
+  category.save()
+    .then(data => {
+      res.status(200).send({ status: true, message: "Submitted Successfully", data: data });
+    })
+    .catch(error => {
+      res.status(500).send({
+        message: error.message || "An error occurred while saving the category data."
+      });
+    });
+};
 
 // Subcategory Create Method
-
 exports.createSubcategory = async (req, res) => {
   try {
     const subcategory = new Subcategory(req.body);
+
     const newSubcategory = await subcategory.save();
     res.json(newSubcategory);
   } catch (error) {
@@ -85,6 +103,7 @@ exports.getCategories = async (req, res) => {
 exports.getSubCategories = async (req, res) => {
   try {
     const category = await CategoryDetails.findById(req.params.id);
+
     const subcategories = await Subcategory.find({ category: req.params.id }, 'id name image');
     res.json({ id: category.id, name: category.name, subcategories });
   } catch (err) {
@@ -113,9 +132,15 @@ exports.getProductsDetails = async (req, res) => {
         Mrp: item.Mrp,
         Mop: item.Mop,
         offer: item.offer,
-        Color: item.Color.map(Colors => ({colors: Colors})),
-        size: item.size.map(Size => ({size: Size})),
-        image: item.image.map(imageUrl => ({ url: imageUrl })),
+        Color: item.Color.map(color => ({
+          colors: color.colors,
+          Code: color.Code
+        })),   
+        size: item.size.map(size => ({
+          size: size.size,
+          Text: size.Text
+        })),       
+         image: item.image.map(imageUrl => ({ url: imageUrl })),
         Description: item.Description,
         Specification: item.Specification,
         quantity: item.quantity,

@@ -4,7 +4,7 @@ const CategoryDetails_Controller = require('../Controller/CategoryDetails_Contro
 
 
 // Create Method with Post Api
-router.post('/categories', CategoryDetails_Controller.createCategory);
+router.post('/categories', CategoryDetails_Controller.create);
 router.post('/subcategories', CategoryDetails_Controller.createSubcategory);
 // router.post('/items', categoryController.createItem);
 router.post('/productDetails',CategoryDetails_Controller.createProductDetails)
