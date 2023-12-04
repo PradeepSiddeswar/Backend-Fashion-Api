@@ -6,7 +6,6 @@ const CategoryDetails_Controller = require('../Controller/CategoryDetails_Contro
 // Create Method with Post Api
 router.post('/categories', CategoryDetails_Controller.create);
 router.post('/subcategories', CategoryDetails_Controller.createSubcategory);
-// router.post('/items', categoryController.createItem);
 router.post('/productDetails',CategoryDetails_Controller.createProductDetails)
 router.post('/similarProducts', CategoryDetails_Controller.createSimilarProducts)
 router.post('/add-to-cart', CategoryDetails_Controller.createaddToCart)
@@ -15,7 +14,6 @@ router.post('/add-to-cart', CategoryDetails_Controller.createaddToCart)
 // Get Method with Api
 router.get('/categories', CategoryDetails_Controller.getCategories);
 router.get('/subcategories/:id', CategoryDetails_Controller.getSubCategories);
-// router.get('/categories/:categoryId/subcategories/:subcategoryId', categoryController.getSubcategoryItems);
 router.get('/productDetails/:subcategoryId', CategoryDetails_Controller.getProductsDetails);
 router.get('/similarProducts/:subcategoryId', CategoryDetails_Controller.getSimilarProducts);
 

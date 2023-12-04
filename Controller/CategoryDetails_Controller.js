@@ -84,14 +84,12 @@ exports.createSimilarProducts = async (req, res) => {
   try {
     const productData = req.body;
 
-    // Check if quantity is provided and if it's less than or equal to 0
     if (!productData.quantity || productData.quantity <= 0) {
       productData.status = 'out of stock';
     } else {
       productData.status = 'in stock';
     }
 
-    // Calculate the total price with the discount applied (decrease of 12%)
     const totalPrice = Number(productData.Mrp) * Number(productData.quantity) * (1 - (Number(productData.offer) / 100));
     const totalQuantity = Number(productData.quantity);
 
@@ -129,7 +127,7 @@ exports.createaddToCart = async (req, res) => {
 
     return res.status(200).json({ message: 'Items added to the cart successfully' });
   } catch (error) {
-    console.error('Error adding items to cart:', error); // Log error for debugging
+    console.error('Error adding items to cart:', error); 
     return res.status(500).json({ error: 'Could not add items to the cart' });
   }
 };
@@ -211,6 +209,7 @@ exports.getProductsDetails = async (req, res) => {
 
     res.json(formattedItems[0]);
   } catch (err) {
+    
     res.status(500).json({ error: err.message });
   }
 };
