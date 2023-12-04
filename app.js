@@ -14,7 +14,6 @@ app.use(cors({
 
 const CategoryDetailsRoute = require('./Routes/CategoryDetails_Router')
 const TopListRoute = require("./Routes/TopList_Router")
-// const WishListRoute = require("./Routes/WishList_Router")
 // const TabsListRoute = require('./Routes/TabsList_Router')
 const bp = require("body-parser")
 app.use(bp.json());
@@ -38,11 +37,11 @@ mongoose.connect(process.env.MONGO_URL, {
 
 
 app.get("/", (req, res) => {
-    res.send("Hello world")
+    res.send("Hello World")
 })
 
 app.use(express.static("upload"))
 app.use('/Category-Details', CategoryDetailsRoute) // imported all Subcategory and ProductDetails here 
 app.use('/Tabs-List', TopListRoute)
-// app.use('/wishList', WishListRoute)
+
 // app.use('/TabsList1', TabsListRoute)

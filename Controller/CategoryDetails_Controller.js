@@ -1,3 +1,4 @@
+
 const CategoryDetails = require('../Model/CategoryDetails_Model');
 const Subcategory = require('../Model/SubCategory_Model');
 const ProductItem = require('../Model/ProductItem_Model')
@@ -258,7 +259,7 @@ exports.getAllItemsInCart = async (req, res) => {
     const itemCartItems = await ProductItem.find({ _id: { $in: cart } });
     const similarProductCartItems = await SimilarItems.find({ _id: { $in: cart } });
 
-    const cartItems = [...itemCartItems, ...similarProductCartItems];
+    const cartItems = [...itemCartItems,...similarProductCartItems];
 
     if (!cartItems || cartItems.length === 0) {
       return res.status(404).json({ message: 'No items found in the cart' });

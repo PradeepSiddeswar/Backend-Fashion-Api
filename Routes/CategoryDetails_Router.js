@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const CategoryDetails_Controller = require('../Controller/CategoryDetails_Controller');
-
+const HomePage_Multer = require("../Config/HomePage_Multer")
 
 // Create Method with Post Api
-router.post('/categories', CategoryDetails_Controller.create);
+router.post('/categories', HomePage_Multer.single("image"),CategoryDetails_Controller.create);
 router.post('/subcategories', CategoryDetails_Controller.createSubcategory);
 router.post('/productDetails',CategoryDetails_Controller.createProductDetails)
 router.post('/similarProducts', CategoryDetails_Controller.createSimilarProducts)
