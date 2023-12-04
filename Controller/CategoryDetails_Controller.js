@@ -259,7 +259,7 @@ exports.getAllItemsInCart = async (req, res) => {
     const itemCartItems = await ProductItem.find({ _id: { $in: cart } });
     const similarProductCartItems = await SimilarItems.find({ _id: { $in: cart } });
 
-    const cartItems = [...itemCartItems,...similarProductCartItems];
+    const cartItems = [...itemCartItems, ...similarProductCartItems];
 
     if (!cartItems || cartItems.length === 0) {
       return res.status(404).json({ message: 'No items found in the cart' });
@@ -268,25 +268,51 @@ exports.getAllItemsInCart = async (req, res) => {
     let totalQuantity = 0;
     let totalAmount = 0;
 
-    cartItems.forEach((item) => {
+    const formattedCartItems = cartItems.map((item) => {
       totalQuantity += item.quantity;
-      totalAmount += item.Mrp * item.quantity * (1 - item.offer / 100);
+
+      let itemTotalAmount = 0;
+      if (item.Mrp && item.quantity && item.offer) {
+        itemTotalAmount = item.Mrp * item.quantity * (1 - item.offer / 100);
+        totalAmount += itemTotalAmount;
+      }
+
+      const formattedItem = {
+        product: {
+          _id: item._id,
+          name: item.name,
+          Mrp: item.Mrp,
+          Mop: item.Mop,
+          offer: item.offer,
+          image: '', // Default empty string for image URL
+          quantity: item.quantity,
+          status: item.status 
+        },
+        totalAmount: itemTotalAmount.toFixed(2),
+        totalQuantity: item.quantity,
+      };
+
+      if (item instanceof ProductItem && Array.isArray(item.image) && item.image.length > 0) {
+        formattedItem.product.image = item.image.map((imgUrl) => ({ url: imgUrl }));
+      } else if (item instanceof ProductItem && !Array.isArray(item.image) && item.image) {
+        formattedItem.product.image = [{ url: item.image.url }]; // Use single URL if not an array
+      } else if (item instanceof SimilarItems && typeof item.image === 'string') {
+        formattedItem.product.image = item.image; // Use string URL directly for SimilarItems
+      } else {
+        delete formattedItem.product.image; // Remove image property if not found or doesn't meet conditions
+      }
+
+      return formattedItem;
     });
 
     const response = {
-      cartItems: cartItems.map((item) => ({
-        product: item,
-        totalAmount: (item.Mrp * item.quantity * (1 - item.offer / 100)).toFixed(2),
-        totalQuantity: item.quantity,
-      })),
+      message: 'All Product Items Added-To-Cart Successfully',
+      cartItems: formattedCartItems,
       totalAmount: totalAmount.toFixed(2),
       totalQuantity,
     };
 
-    return res.status(200).json({
-      message: 'All Items Added-To-Cart Successfully',
-      ...response,
-    });
+    return res.status(200).json(response);
   } catch (error) {
     console.error('Error retrieving items:', error);
     return res.status(500).json({ error: 'Could not retrieve items from the cart' });
@@ -294,6 +320,7 @@ exports.getAllItemsInCart = async (req, res) => {
 };
 
 
+/// Remove Method
 exports.removeFromCart = async (req, res) => {
   try {
     const { itemId } = req.params;
