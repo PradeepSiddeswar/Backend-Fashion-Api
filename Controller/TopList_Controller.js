@@ -36,7 +36,7 @@ exports.create =  async (req, res) => {
       });
   
       const responseData = {
-        Message: "Tabs fetched successfully",
+        Message: "Tabs fetched Successfully",
         Data: {
           Fashion: formattedData
         }

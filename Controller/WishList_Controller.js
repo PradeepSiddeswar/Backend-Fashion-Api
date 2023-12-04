@@ -16,10 +16,10 @@ exports.createaddToWishList = async (req, res) => {
 
     cart.push(...idsToAdd);
 
-    return res.status(200).json({ message: 'Items added to the cart successfully' });
+    return res.status(200).json({ message: 'Items added to the WishList successfully' });
   } catch (error) {
     console.error('Error adding items to cart:', error); 
-    return res.status(500).json({ error: 'Could not add items to the cart' });
+    return res.status(500).json({ error: 'Could not add items to the WishList' });
   }
 };
 
@@ -32,7 +32,7 @@ exports.getAllItemsInWishList = async (req, res) => {
       const cartItems = [...itemCartItems, ...similarProductCartItems];
   
       if (!cartItems || cartItems.length === 0) {
-        return res.status(404).json({ message: 'No items found in the cart' });
+        return res.status(404).json({ message: 'No items found in the WishList' });
       }
   
       let totalQuantity = 0;
@@ -76,7 +76,7 @@ exports.getAllItemsInWishList = async (req, res) => {
       });
   
       const response = {
-        message: 'All Product Items Added-To-Cart Successfully',
+        message: 'All Product Items Added-To-WishList Successfully',
         cartItems: formattedCartItems,
         totalAmount: totalAmount.toFixed(2),
         totalQuantity,
@@ -85,7 +85,7 @@ exports.getAllItemsInWishList = async (req, res) => {
       return res.status(200).json(response);
     } catch (error) {
       console.error('Error retrieving items:', error);
-      return res.status(500).json({ error: 'Could not retrieve items from the cart' });
+      return res.status(500).json({ error: 'Could not retrieve items from the WishList' });
     }
   };
   
@@ -99,15 +99,15 @@ exports.getAllItemsInWishList = async (req, res) => {
       const indexToRemove = cart.findIndex((item) => item === itemId);
   
       if (indexToRemove === -1) {
-        return res.status(404).json({ message: 'Item not found in the cart' });
+        return res.status(404).json({ message: 'Item not found in the WishList' });
       }
   
       cart.splice(indexToRemove, 1);
   
-      return res.status(200).json({ message: 'Item removed from the cart successfully' });
+      return res.status(200).json({ message: 'Item removed from the WishList successfully' });
     } catch (error) {
-      console.error('Error removing item from cart:', error);
-      return res.status(500).json({ error: 'Could not remove item from the cart' });
+      console.error('Error removing item from wishList:', error);
+      return res.status(500).json({ error: 'Could not remove item from the WishList' });
     }
   };
   
