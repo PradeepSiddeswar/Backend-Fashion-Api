@@ -16,6 +16,7 @@ const CategoryDetailsRoute = require('./Routes/CategoryDetails_Router')
 const TopListRoute = require("./Routes/TopList_Router")
 const WishListRoute = require("./Routes/WishList_Router")
 const TabsListRoute = require("./Routes/TabsList_Router")
+const BannerRoute = require("./Routes/Banner_Router")
 // const TabsListRoute = require('./Routes/TabsList_Router')
 const bp = require("body-parser")
 app.use(bp.json());
@@ -47,4 +48,5 @@ app.use('/Category-Details', CategoryDetailsRoute) // imported all Subcategory a
 app.use('/Tabs-List', TopListRoute)
 app.use('/WishList',WishListRoute)
 app.use('/TabsList',TabsListRoute)
+app.use('/Banner',BannerRoute)
 // app.use('/TabsList1', TabsListRoute)

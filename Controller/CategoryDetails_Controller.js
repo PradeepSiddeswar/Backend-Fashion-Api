@@ -1,4 +1,3 @@
-
 const CategoryDetails = require('../Model/CategoryDetails_Model');
 const Subcategory = require('../Model/SubCategory_Model');
 const ProductItem = require('../Model/ProductItem_Model')
@@ -133,23 +132,7 @@ exports.createaddToCart = async (req, res) => {
   }
 };
 
-// exports.createaddToWishList = async (req, res) => {
-//   try {
-//     const { productIds } = req.body;
 
-//     if (!productIds || (Array.isArray(productIds) && productIds.length === 0)) {
-//       return res.status(400).json({ error: 'Invalid request format' });
-//     }
-//     const idsToAdd = Array.isArray(productIds) ? productIds : [productIds];
-
-//     cart.push(...idsToAdd);
-
-//     return res.status(200).json({ message: 'Items added to the cart successfully' });
-//   } catch (error) {
-//     console.error('Error adding items to cart:', error); 
-//     return res.status(500).json({ error: 'Could not add items to the cart' });
-//   }
-// };
 /// get method with Categories
 exports.getCategories = async (req, res) => {
   try {
