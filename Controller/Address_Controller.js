@@ -26,3 +26,30 @@ exports.create = async (req, res) => {
         });
       });
   };
+
+  // Update Method 
+
+exports.update = async (req, res) => {
+    if (!req.body) {
+        res.status(400).send("Content cannot be empty");
+        return;
+    }
+
+    const id = req.params.id; // Get the ID from request parameters
+
+    Address.findByIdAndUpdate(id, req.body, { new: true })
+        .then(data => {
+            if (!data) {
+                res.status(404).send({
+                    message: `Cannot update Address with id=${id}. Address not found.`
+                });
+            } else {
+                res.status(200).send({ message: "Address updated successfully", Data: data });
+            }
+        })
+        .catch(error => {
+            res.status(500).send({
+                message: error.message || `Error updating Address with id=${id}`
+            });
+        });
+};
