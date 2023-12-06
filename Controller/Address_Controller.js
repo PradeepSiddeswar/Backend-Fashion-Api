@@ -27,15 +27,30 @@ exports.create = async (req, res) => {
       });
   };
 
-  // Update Method 
+ 
 
-exports.update = async (req, res) => {
+// Get Method 
+exports.getAll = async (req, res) => {
+    try {
+        const address = await Address.find();
+        res.status(200).send({
+            Message: "All Address Added Successfully",
+            Data: address
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+ // Update Method 
+
+ exports.update = async (req, res) => {
     if (!req.body) {
         res.status(400).send("Content cannot be empty");
         return;
     }
 
-    const id = req.params.id; // Get the ID from request parameters
+    const id = req.params.id; 
 
     Address.findByIdAndUpdate(id, req.body, { new: true })
         .then(data => {
@@ -54,20 +69,7 @@ exports.update = async (req, res) => {
         });
 };
 
-// Get Method 
-exports.getAll = async (req, res) => {
-    try {
-        const address = await Address.find();
-        res.status(200).send({
-            Message: "All Address Added Successfully",
-            Data: address
-        });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-};
-
-// delete method
+// Delete method
 exports.delete = (req, res) => {
     const id = req.params.id
     Address.findByIdAndDelete(id)
@@ -75,7 +77,7 @@ exports.delete = (req, res) => {
             if (!data) {
                 res.status(400).send(`address not found with ${id}`)
             } else {
-                res.send("Address Deleted Successfully")
+                res.send({Message: "Address Deleted Succesfully"})
             }
         })
         .catch(error => {
