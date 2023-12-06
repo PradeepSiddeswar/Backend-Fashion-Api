@@ -2,8 +2,10 @@ const twilio = require('twilio');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const JWT_OTP = require('../Model/JWT_OTP_Model');
+const accountSid = 'ACe7095109a4c0dd3313b18eade9848c90';
+const authToken = 'dee23c3ca59e3c496f42a03c6e6a1036';
 
-const twilioClient = twilio('ACe7095109a4c0dd3313b18eade9848c90', '38be5d18f65e79c99a53ca31532540cc');
+const twilioClient = twilio(accountSid, authToken);
 const secretKey = crypto.randomBytes(32).toString('hex');
 console.log(secretKey);
 
@@ -16,14 +18,14 @@ async function sendOTP(mobileNumber, otp) {
       from: '+14252767599',
       to: mobileNumber,
     });
-    return true; 
+    return true; // SMS sent successfully
   } catch (error) {
     console.error('Error sending OTP:', error);
-    return false; 
+    return false; // SMS sending failed
   }
 }
 
-// Create to send OTP and generate JWT
+// Controller function to send OTP and generate JWT
 exports.sendOTPController = async (req, res) => {
   const { mobileNumber } = req.body;
 
@@ -31,7 +33,7 @@ exports.sendOTPController = async (req, res) => {
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
   try {
-    
+    // Save OTP in the database (you need to create the OTP model for this)
     const otpRecord = new JWT_OTP({ mobileNumber, otp });
     await otpRecord.save();
 
@@ -40,7 +42,7 @@ exports.sendOTPController = async (req, res) => {
 
     if (smsSent) {
       // Generate JWT token with phone number as a claim
-      const token = jwt.sign({ mobileNumber }, secretKey, { expiresIn: '1sec' });
+      const token = jwt.sign({ mobileNumber }, secretKey, { expiresIn: '1h' });
 
       res.status(200).json({ message: 'OTP sent successfully', 
       otp,
@@ -60,6 +62,7 @@ exports.verifyOTP = async (req, res) => {
     const {  otp } = req.body;
   
     try {
+      // Find the OTP record in the database
       const otpRecord = await JWT_OTP.findOne({ otp });
   
       if (!otpRecord) {
@@ -78,12 +81,14 @@ exports.logout = async (req, res) => {
     const { refreshToken } = req.body;
 
     try {
+        // Assuming you have a RefreshToken model or schema
         const existingRefreshToken = await JWT_OTP.findOne({ token: refreshToken });
 
         if (!existingRefreshToken) {
             return res.status(401).json({ message: 'Invalid refresh token' });
         }
 
+        // Invalidate the refresh token or perform other actions
         await existingRefreshToken.save();
 
         return res.status(200).json({ message: 'Refresh token invalidated successfully' });
