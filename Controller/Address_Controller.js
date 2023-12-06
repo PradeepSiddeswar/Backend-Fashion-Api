@@ -53,3 +53,32 @@ exports.update = async (req, res) => {
             });
         });
 };
+
+// Get Method 
+exports.getAll = async (req, res) => {
+    try {
+        const address = await Address.find();
+        res.status(200).send({
+            Message: "All Address Added Successfully",
+            Data: address
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+// delete method
+exports.delete = (req, res) => {
+    const id = req.params.id
+    Address.findByIdAndDelete(id)
+        .then(data => {
+            if (!data) {
+                res.status(400).send(`address not found with ${id}`)
+            } else {
+                res.send("Address Deleted Successfully")
+            }
+        })
+        .catch(error => {
+            res.status(500).send(error)
+        })
+}
