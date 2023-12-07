@@ -262,7 +262,7 @@ exports.getAllItemsInCart = async (req, res) => {
     const cartItems = [...itemCartItems, ...similarProductCartItems];
 
     if (!cartItems || cartItems.length === 0) {
-      return res.status(404).json({ message: 'No items found in the cart' });
+      return res.status(404).json({ message: 'No items found in the WishList' });
     }
 
     let totalQuantity = 0;
@@ -286,7 +286,7 @@ exports.getAllItemsInCart = async (req, res) => {
           offer: item.offer,
           image: '', // Default empty string for image URL
           quantity: item.quantity,
-          status: item.status 
+          status: item.status,
         },
         totalAmount: itemTotalAmount.toFixed(2),
         totalQuantity: item.quantity,
@@ -296,8 +296,10 @@ exports.getAllItemsInCart = async (req, res) => {
         formattedItem.product.image = item.image.map((imgUrl) => ({ url: imgUrl }));
       } else if (item instanceof ProductItem && !Array.isArray(item.image) && item.image) {
         formattedItem.product.image = [{ url: item.image.url }]; // Use single URL if not an array
+      } else if (item instanceof SimilarItems && Array.isArray(item.image) && item.image.length > 0) {
+        formattedItem.product.image = item.image.map((imgUrl) => ({ url: imgUrl }));
       } else if (item instanceof SimilarItems && typeof item.image === 'string') {
-        formattedItem.product.image = item.image; // Use string URL directly for SimilarItems
+        formattedItem.product.image = [{ url: item.image }]; // Use string URL directly for SimilarItems
       } else {
         delete formattedItem.product.image; // Remove image property if not found or doesn't meet conditions
       }
@@ -306,7 +308,7 @@ exports.getAllItemsInCart = async (req, res) => {
     });
 
     const response = {
-      message: 'All Product Items Added-To-Cart Successfully',
+      message: 'All Product Items Added-To-WishList Successfully',
       cartItems: formattedCartItems,
       totalAmount: totalAmount.toFixed(2),
       totalQuantity,
@@ -315,9 +317,10 @@ exports.getAllItemsInCart = async (req, res) => {
     return res.status(200).json(response);
   } catch (error) {
     console.error('Error retrieving items:', error);
-    return res.status(500).json({ error: 'Could not retrieve items from the cart' });
+    return res.status(500).json({ error: 'Could not retrieve items from the WishList' });
   }
 };
+
 
 // Multiple Add-to-cart
 // exports.getAllItemsInWishList= async (req, res) => {
