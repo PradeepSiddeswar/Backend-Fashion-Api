@@ -22,7 +22,7 @@ exports.create = async (req, res) => {
       })
       .catch(error => {
         res.status(500).send({
-          message: error.message || "An error occurred while saving the category data."
+          message: error.message || "An error occurred while saving the address data."
         });
       });
   };
@@ -68,6 +68,7 @@ exports.getAll = async (req, res) => {
             });
         });
 };
+
 
 // Delete method
 exports.delete = (req, res) => {
