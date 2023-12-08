@@ -9,13 +9,7 @@ exports.create = async (req, res) => {
     const deliveryaddress = new DeliveryAddress({
         FullName: req.body.FullName,
         MobileNumber: req.body.MobileNumber,
-        // Pincode: req.body.Pincode,
         Address: req.body.Address,
-        // City: req.body.City,
-        // State: req.body.State,
-        Name: req.body.Name,
-        Price: req.body.Price,
-        TotalItems: req.body.TotalItems,
         TotalAmount: req.body.TotalAmount
     });
 
